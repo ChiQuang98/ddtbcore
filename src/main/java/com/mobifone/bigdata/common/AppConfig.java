@@ -16,7 +16,8 @@ import java.security.CodeSource;
 import java.util.Properties;
 
 public class AppConfig {
-    private static final String CONF_PATH = "conf";
+//    private static final String CONF_PATH = "conf";
+    private static final String CONF_PATH = "";
     private static final String CONF_FILE = "app.properties";
     private static PropertiesConfiguration propertiesConfiguration = null;
     public static synchronized PropertiesConfiguration getPropertiesConfiguration() throws AppConfigException {
@@ -37,8 +38,9 @@ public class AppConfig {
     public static Properties getAppConfigProperties() throws FileNotFoundException, IOException {
         Properties prop = new Properties();
 //        System.out.println(getLocation(CONF_PATH));
-        String boneCPConfigFile = getLocation(CONF_PATH) + "/" + CONF_FILE;
-
+//        String boneCPConfigFile = getLocation(CONF_PATH) + "/" + CONF_FILE;
+        String boneCPConfigFile = getLocation(CONF_FILE);
+//        System.out.println(boneCPConfigFile);
         prop.load(new FileInputStream(boneCPConfigFile));
 
         return prop;

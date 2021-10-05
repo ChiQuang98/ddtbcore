@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +39,10 @@ public class StreamingUtils {
         }
         return instance;
     }
+    public String getCurrentLocalDateTimeStamp() {
+        return LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+    }
     public void ProcessingStreamMDO(Utils utilHbase, Connection connection, long TTLMDO, ObjectInputStream os) {
         try {
 
@@ -55,9 +61,11 @@ public class StreamingUtils {
 //                    System.out.println(data);
                     List<String> arrData = Arrays.asList(data.split("\\r?\\n"));
                     int len = arrData.size();
+
 //                    for(int k=0;k<len;k++){
 //                        System.out.println("Q: "+arrData.get(k));
 //                    }
+                    //TODO Sua time expried  tai day
                     if(len<=levelLine2){
                         ThreadWorkerMDO threadWorkerMDO = new ThreadWorkerMDO(TTLMDO,tableMDO,arrData);
                         executorService.execute(threadWorkerMDO);
@@ -145,20 +153,25 @@ public class StreamingUtils {
 
     public void ProcessingStreamSYS(Utils utilHbase, Connection connection, long TTL, ObjectInputStream os) {
         try {
+            ElasticSearchUtil elasticSearchUtil = ElasticSearchUtil.getInstance();
             UUID uuid = UUID.randomUUID();
             Table tableSYS = connection.getTable(TableName.valueOf("SYSTable"));
             Table tableMDO = connection.getTable(TableName.valueOf("MDOTable"));
             Scan scan = new Scan();
-
+            JSONObject jsonNumNats = new JSONObject();
             long countMessageSYS = 0;
             long totalTime = 0;
             CachedThreadPoolNats threadpoolNats = CachedThreadPoolNats.getInstance();
             ExecutorService executorService = threadpoolNats.getExecutorService();
             while (true) {
                 try{
+                    //TODO Sua time expried  tai day
                     String data = (String) os.readObject();
                     List<String> arrData = Arrays.asList(data.split("\\r?\\n"));
                     int len = arrData.size();
+                    String currentTime = getCurrentLocalDateTimeStamp();
+                    jsonNumNats.put("@timereceivenats",currentTime);
+                    jsonNumNats.put("numberofmessages",len);
                     if(len<=levelLine2){
                         int pivot = len/2;
                         List<String>  dataSplit1 = arrData.subList(0,pivot);
@@ -362,7 +375,6 @@ public class StreamingUtils {
                                 finish = System.currentTimeMillis();
 //                                    System.out.println("TIME Before - After: " + start + " | " + finish);
                                 String log = "Inserted PhoneNumber:"+phoneMDOCol1+" With (IpPublic: "+rowData[4]+"| PortPublic: "+rowData[5]+") to Table SYS: "  + " In: ";
-
                             }
                         }
                     }

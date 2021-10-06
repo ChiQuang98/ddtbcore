@@ -2,13 +2,7 @@ package com.mobifone.bigdata.util;
 
 import com.mobifone.bigdata.common.AppConfig;
 import org.apache.http.HttpHost;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
+
 
 import java.io.IOException;
 import java.util.Map;

@@ -94,6 +94,7 @@ public class Utils {
         conf.set("hbase.rpc.timeout", "10000");  // default 60 secs
         conf.set("hbase.rpc.shortoperation.timeout", "10000"); // default 10 secs
         Connection connection = null;
+        System.out.println("HOST"+properties.getProperty("hbase.host"));
         try {
             connection = ConnectionFactory.createConnection(conf);
         } catch (IOException e) {
@@ -117,10 +118,10 @@ public class Utils {
                 tableDescriptor.addFamily(new HColumnDescriptor(CfName));
             }
             admin.createTable(tableDescriptor);
-            System.out.println("Table Created: "+tableName);
+            logger.info("Table Created: "+tableName);
             return true;
         }
-        System.out.println("Fail or Table Existed: "+tableName);
+       logger.info("Fail or Table Existed: "+tableName);
         return false;
     }
 //    {"IPPrivate","PortPrivate","IPPublic","PortPublic","IPDest","PortDest"},

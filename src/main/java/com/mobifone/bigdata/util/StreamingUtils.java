@@ -45,7 +45,6 @@ public class StreamingUtils {
     }
     public void ProcessingStreamMDO(Utils utilHbase, Connection connection, long TTLMDO, ObjectInputStream os) {
         try {
-
             CachedThreadPoolMDO threadpoolMDO = CachedThreadPoolMDO.getInstance();
             ExecutorService executorService = threadpoolMDO.getExecutorService();
             long index = 0;
@@ -407,6 +406,7 @@ public class StreamingUtils {
             if (rowData.length < 5) {
                 continue;
             }
+            //rowkey theo ipprivate
             String rowName = "KEY|" + rowData[4];
 //                System.out.println(rowName);
 //                System.out.println(rowName);
